@@ -167,6 +167,8 @@ class ClusterCheck:
 class DnsCheck:
     """NodePing DNS check.
 
+    https://nodeping.com/dns_check.html
+
     Args:
         target (str): URL of host to monitor
         port (int): Port for DNS server to query
@@ -221,6 +223,8 @@ class DnsCheck:
 @dataclass
 class DohDotCheck:
     """NodePing DOHDOT check.
+
+    https://nodeping.com/dohdot_check.html
 
     Args:
         target (str): URL of host to monitor
@@ -283,6 +287,8 @@ class DohDotCheck:
 class FtpCheck:
     """NodePing FTP check.
 
+    https://nodeping.com/ftp_check.html
+
     Args:
         target (str): URL of host to monitor
         port (int): FTP server port
@@ -332,6 +338,8 @@ class FtpCheck:
 class HttpCheck:
     """NodePing HTTP check.
 
+    https://nodeping.com/http_check.html
+
     Args:
         target (str): URL to target host
         follow (bool): Whether to follow redirects or not
@@ -374,6 +382,8 @@ class HttpCheck:
 @dataclass
 class HttpAdvCheck:
     """NodePing HTTPADV check.
+
+    https://nodeping.com/http_advanced_check.html
 
     Args:
         target (str): URL to target host
@@ -436,6 +446,8 @@ class HttpAdvCheck:
 class HttpContentCheck:
     """NodePing HTTPCONTENT check.
 
+    https://nodeping.com/http_content_check.html
+
     Args:
         target (str): URL to target host
         invert (bool): Used for "Does not contain" functionality
@@ -483,6 +495,7 @@ class HttpContentCheck:
 class HttpParseCheck:
     """NodePing HTTPPARSE check.
 
+    https://nodeping.com/http_content_check.html
 
     `fields` expects a dictionary where each object should have a name, min, and max.
 
@@ -543,6 +556,8 @@ class HttpParseCheck:
 class Imap4Check:
     """NodePing IMAP4 check.
 
+    https://nodeping.com/imap_check.html
+
     Args:
         target (str): URL to target host
         port (int): port used to test IMAP4 communications
@@ -593,6 +608,8 @@ class Imap4Check:
 @dataclass
 class MongodbCheck:
     """NodePing MONGODB check.
+
+    https://nodeping.com/mongodb_check.html
 
     `fields` example:
 
@@ -654,6 +671,8 @@ class MongodbCheck:
 class MtrCheck:
     """NodePing MTR check.
 
+    https://nodeping.com/mtr_check.html
+
     Args:
         target (str): URL to target host
         ipv6 (bool): Whether to resolve IPv4 or IPv6
@@ -694,6 +713,8 @@ class MtrCheck:
 @dataclass
 class MySqlCheck:
     """NodePing MYSQL check.
+
+    https://nodeping.com/mysql_check.html
 
     `fields` example:
 
@@ -764,6 +785,8 @@ class MySqlCheck:
 class NtpCheck:
     """NodePing NTP check.
 
+    https://nodeping.com/ntp_check.html
+
     Args:
         target (str): URL to target host
         port (int): port used to test communications
@@ -807,6 +830,8 @@ class NtpCheck:
 class PingCheck:
     """NodePing PING check.
 
+    https://nodeping.com/ping_check.html
+
     Args:
         target (str): URL to target host
         ipv6 (bool): Whether to resolve IPv4 or IPv6
@@ -847,6 +872,8 @@ class PingCheck:
 @dataclass
 class Pop3Check:
     """NodePing POP3 check.
+
+    https://nodeping.com/pop_check.html
 
     Args:
         target (str): URL to target host
@@ -899,6 +926,8 @@ class Pop3Check:
 class PortCheck:
     """NodePing PORT check.
 
+    https://nodeping.com/port_check.html
+
     Args:
         target (str): URL to target host
         port (int): Port to check
@@ -941,6 +970,8 @@ class PortCheck:
 @dataclass
 class PostgreSqlCheck:
     """NodePing PGSQL check.
+
+    https://nodeping.com/pgsql_check.html
 
     `fields` example:
 
@@ -1001,6 +1032,8 @@ class PostgreSqlCheck:
 class PushCheck:
     """NodePing PUSH check.
 
+    https://nodeping.com/push_check.html
+
     `fields` example:
 
     fields = {
@@ -1054,8 +1087,53 @@ class PushCheck:
 
 
 @dataclass
+class RblCheck:
+    """NodePing RBL check.
+
+    https://nodeping.com/rbl_check.html
+
+    Args:
+        target (str): URL to target host
+        ignore (str): comma separated list of RBLs to ignore
+        label (str): Name of the check that will be created
+        autodiag (bool): Enable/disable auto diagnostics for this check
+        interval (int): Interval in minutes to monitor target
+        enabled (bool): If created check will be enabled or disabled
+        public (bool): If the results for the created check will be public or not
+        runlocations (str|list): Which region to be originated from
+        homeloc (str|bool): Which probe in the region to originate the check from
+        threshold (int): Time in seconds for an acceptable response
+        sens (int): Rechecks to help avoid unecessary notifications
+        dep (str): ID of the check used for the notification dependency
+        notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
+        mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+    """
+
+    target: str
+    ignore: str = ""
+    label: str = ""
+    autodiag: bool = DEFAULTS["autodiag"]
+    interval: int = DEFAULTS["interval"]
+    enabled: bool = DEFAULTS["enabled"]
+    public: bool = DEFAULTS["enabled"]
+    runlocations: str | list = DEFAULTS["runlocations"]
+    homeloc: str | bool = DEFAULTS["homeloc"]
+    threshold: int = DEFAULTS["threshold"]
+    sens: int = DEFAULTS["sens"]
+    dep: str = DEFAULTS["dep"]
+    notifications: list = field(default_factory=list)
+    mute: bool = DEFAULTS["mute"]
+    type: str = "RBL"
+
+    def __post_init__(self):
+        self.type = "RBL"
+
+
+@dataclass
 class RedisCheck:
     """NodePing REDIS check.
+
+    https://nodeping.com/redis_check.html
 
     Args:
         target (str): URL to target host
@@ -1099,12 +1177,11 @@ class RedisCheck:
 
 
 @dataclass
-class RblCheck:
-    """NodePing RBL check.
+class RdpCheck:
+    """NodePing RDP check.
 
     Args:
         target (str): URL to target host
-        ignore (str): comma separated list of RBLs to ignore
         label (str): Name of the check that will be created
         autodiag (bool): Enable/disable auto diagnostics for this check
         interval (int): Interval in minutes to monitor target
@@ -1120,6 +1197,50 @@ class RblCheck:
     """
 
     target: str
+    label: str = ""
+    autodiag: bool = DEFAULTS["autodiag"]
+    interval: int = DEFAULTS["interval"]
+    enabled: bool = DEFAULTS["enabled"]
+    public: bool = DEFAULTS["enabled"]
+    runlocations: str | list = DEFAULTS["runlocations"]
+    homeloc: str | bool = DEFAULTS["homeloc"]
+    threshold: int = DEFAULTS["threshold"]
+    sens: int = DEFAULTS["sens"]
+    dep: str = DEFAULTS["dep"]
+    notifications: list = field(default_factory=list)
+    mute: bool = DEFAULTS["mute"]
+    type: str = "RDP"
+
+    def __post_init__(self):
+        self.type = "RDP"
+
+
+@dataclass
+class SipCheck:
+    """NodePing SIP check.
+
+    https://nodeping.com/sip_check.html
+
+    Args:
+        target (str): URL to target host
+        transport (str): udp, tcp, tls, ws, or wss transport protocol options
+        ignore (str): comma-separated list of status codes to ignore
+        label (str): Name of the check that will be created
+        autodiag (bool): Enable/disable auto diagnostics for this check
+        interval (int): Interval in minutes to monitor target
+        enabled (bool): If created check will be enabled or disabled
+        public (bool): If the results for the created check will be public or not
+        runlocations (str|list): Which region to be originated from
+        homeloc (str|bool): Which probe in the region to originate the check from
+        threshold (int): Time in seconds for an acceptable response
+        sens (int): Rechecks to help avoid unecessary notifications
+        dep (str): ID of the check used for the notification dependency
+        notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
+        mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+    """
+
+    target: str
+    transport: str = "udp"
     ignore: str = ""
     label: str = ""
     autodiag: bool = DEFAULTS["autodiag"]
@@ -1133,7 +1254,412 @@ class RblCheck:
     dep: str = DEFAULTS["dep"]
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
-    type: str = "RBL"
+    type: str = "SIP"
 
     def __post_init__(self):
-        self.type = "RBL"
+        self.type = "SIP"
+
+
+@dataclass
+class SmtpCheck:
+    """NodePing SMTP check.
+
+    https://nodeping.com/smtp_check.html
+
+    Args:
+        target (str): URL to target host
+        port (int): port used to test POP3 communications
+        invert (bool): whether or not SMTP accepts mail from the email address
+        verify (bool): The check should fail if the SSL/TLS certificate is invalid
+        email (str): Email address that will be used to test smtp connectivity
+        username (str): Email address for testing logins
+        password (str): Password to authenticate email address
+        secure (bool): Whether SSL/TLS should be used
+        warningdays (int): Warning days befor certificate expiration
+        label (str): Name of the check that will be created
+        autodiag (bool): Enable/disable auto diagnostics for this check
+        interval (int): Interval in minutes to monitor target
+        enabled (bool): If created check will be enabled or disabled
+        public (bool): If the results for the created check will be public or not
+        runlocations (str|list): Which region to be originated from
+        homeloc (str|bool): Which probe in the region to originate the check from
+        threshold (int): Time in seconds for an acceptable response
+        sens (int): Rechecks to help avoid unecessary notifications
+        dep (str): ID of the check used for the notification dependency
+        notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
+        mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+    """
+
+    target: str
+    port: int = 25
+    invert: bool = False
+    verify: bool = True
+    email: str = ""
+    username: str = ""
+    password: str = ""
+    secure: bool = False
+    warningdays: int = 0
+    label: str = ""
+    autodiag: bool = DEFAULTS["autodiag"]
+    interval: int = DEFAULTS["interval"]
+    enabled: bool = DEFAULTS["enabled"]
+    public: bool = DEFAULTS["enabled"]
+    runlocations: str | list = DEFAULTS["runlocations"]
+    homeloc: str | bool = DEFAULTS["homeloc"]
+    threshold: int = DEFAULTS["threshold"]
+    sens: int = DEFAULTS["sens"]
+    dep: str = DEFAULTS["dep"]
+    notifications: list = field(default_factory=list)
+    mute: bool = DEFAULTS["mute"]
+    type: str = "SMTP"
+
+    def __post_init__(self):
+        self.type = "SMTP"
+
+
+@dataclass
+class SnmpCheck:
+    """NodePing SNMP check.
+
+    https://nodeping.com/snmp_check.html
+
+    Args:
+        target (str): URL to target host
+        port (int): port used to test POP3 communications
+        invert (bool): whether or not SMTP accepts mail from the email address
+        verify (bool): The check should fail if the SSL/TLS certificate is invalid
+        email (str): Email address that will be used to test smtp connectivity
+        username (str): Email address for testing logins
+        password (str): Password to authenticate email address
+        secure (bool): Whether SSL/TLS should be used
+        warningdays (int): Warning days befor certificate expiration
+        label (str): Name of the check that will be created
+        autodiag (bool): Enable/disable auto diagnostics for this check
+        interval (int): Interval in minutes to monitor target
+        enabled (bool): If created check will be enabled or disabled
+        public (bool): If the results for the created check will be public or not
+        runlocations (str|list): Which region to be originated from
+        homeloc (str|bool): Which probe in the region to originate the check from
+        threshold (int): Time in seconds for an acceptable response
+        sens (int): Rechecks to help avoid unecessary notifications
+        dep (str): ID of the check used for the notification dependency
+        notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
+        mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+    """
+
+    target: str
+    port: int = 161
+    fields: dict = field(default_factory=dict)
+    snmpv: int = 1
+    snmpcom: str = "public"
+    label: str = ""
+    autodiag: bool = DEFAULTS["autodiag"]
+    interval: int = DEFAULTS["interval"]
+    enabled: bool = DEFAULTS["enabled"]
+    public: bool = DEFAULTS["enabled"]
+    runlocations: str | list = DEFAULTS["runlocations"]
+    homeloc: str | bool = DEFAULTS["homeloc"]
+    threshold: int = DEFAULTS["threshold"]
+    sens: int = DEFAULTS["sens"]
+    dep: str = DEFAULTS["dep"]
+    notifications: list = field(default_factory=list)
+    mute: bool = DEFAULTS["mute"]
+    type: str = "SNMP"
+
+    def __post_init__(self):
+        self.type = "SNMP"
+
+
+@dataclass
+class Spec10DnsCheck:
+    """NodePing SPEC10DNS check.
+
+    https://nodeping.com/spec10dns_check.html
+
+    Example `data` dictionary:
+    checks = {
+        "data": {
+            "201205050153W2Q4C-0J2HSIRF": "1",
+            "201205050153W2Q4C-4RZT8MLN": "1",
+            "201205050153W2Q4C-IOPPFQOT": "1"
+        }
+    }
+
+    Args:
+        data (dict): dictonary of child DNS checks
+        label (str): Name of the check that will be created
+        autodiag (bool): Enable/disable auto diagnostics for this check
+        interval (int): Interval in minutes to monitor target
+        enabled (bool): If created check will be enabled or disabled
+        public (bool): If the results for the created check will be public or not
+        runlocations (str|list): Which region to be originated from
+        homeloc (str|bool): Which probe in the region to originate the check from
+        threshold (int): Time in seconds for an acceptable response
+        sens (int): Rechecks to help avoid unecessary notifications
+        dep (str): ID of the check used for the notification dependency
+        notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
+        mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+    """
+
+    data: dict
+    label: str = ""
+    autodiag: bool = DEFAULTS["autodiag"]
+    interval: int = DEFAULTS["interval"]
+    enabled: bool = DEFAULTS["enabled"]
+    public: bool = DEFAULTS["enabled"]
+    runlocations: str | list = DEFAULTS["runlocations"]
+    homeloc: str | bool = DEFAULTS["homeloc"]
+    threshold: int = DEFAULTS["threshold"]
+    sens: int = DEFAULTS["sens"]
+    dep: str = DEFAULTS["dep"]
+    notifications: list = field(default_factory=list)
+    mute: bool = DEFAULTS["mute"]
+    type: str = "SPEC10DNS"
+
+    def __post_init__(self):
+        self.type = "SPEC10DNS"
+
+
+@dataclass
+class Spec10RddsCheck:
+    """NodePing SPEC10RDDS check.
+
+    https://nodeping.com/spec10rdds_check.html
+
+    Example `data` dictionary:
+    checks = {
+        "data": {
+            "201205050153W2Q4C-0J2HSIRF": "1",
+            "201205050153W2Q4C-4RZT8MLN": "1",
+            "201205050153W2Q4C-IOPPFQOT": "1"
+        }
+    }
+
+    Args:
+        data (dict): dictonary of child WHOIS checks
+        label (str): Name of the check that will be created
+        autodiag (bool): Enable/disable auto diagnostics for this check
+        interval (int): Interval in minutes to monitor target
+        enabled (bool): If created check will be enabled or disabled
+        public (bool): If the results for the created check will be public or not
+        runlocations (str|list): Which region to be originated from
+        homeloc (str|bool): Which probe in the region to originate the check from
+        threshold (int): Time in seconds for an acceptable response
+        sens (int): Rechecks to help avoid unecessary notifications
+        dep (str): ID of the check used for the notification dependency
+        notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
+        mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+    """
+
+    data: dict
+    label: str = ""
+    autodiag: bool = DEFAULTS["autodiag"]
+    interval: int = DEFAULTS["interval"]
+    enabled: bool = DEFAULTS["enabled"]
+    public: bool = DEFAULTS["enabled"]
+    runlocations: str | list = DEFAULTS["runlocations"]
+    homeloc: str | bool = DEFAULTS["homeloc"]
+    threshold: int = DEFAULTS["threshold"]
+    sens: int = DEFAULTS["sens"]
+    dep: str = DEFAULTS["dep"]
+    notifications: list = field(default_factory=list)
+    mute: bool = DEFAULTS["mute"]
+    type: str = "SPEC10RDDS"
+
+    def __post_init__(self):
+        self.type = "SPEC10RDDS"
+
+
+@dataclass
+class SshCheck:
+    """NodePing SSH check.
+
+    https://nodeping.com/ssh_check.html
+
+    Args:
+        target (str): URL or IP to target host
+        invert (bool): whether or not the SSH connection is established or not
+        contentstring (str): Check that the SSH connection returns this string content
+        port (int): sshd port to test
+        username (str): SSH username for testing logins
+        password (str): Password to authenticate user
+        sshkey (str): specify the ID of a SSH private key to be used in the SSH check
+        label (str): Name of the check that will be created
+        autodiag (bool): Enable/disable auto diagnostics for this check
+        interval (int): Interval in minutes to monitor target
+        enabled (bool): If created check will be enabled or disabled
+        public (bool): If the results for the created check will be public or not
+        runlocations (str|list): Which region to be originated from
+        homeloc (str|bool): Which probe in the region to originate the check from
+        threshold (int): Time in seconds for an acceptable response
+        sens (int): Rechecks to help avoid unecessary notifications
+        dep (str): ID of the check used for the notification dependency
+        notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
+        mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+    """
+
+    target: str
+    invert: bool = False
+    contentstring: str = ""
+    port: int = 22
+    username: str = ""
+    password: str = ""
+    sshkey: str = ""
+    label: str = ""
+    autodiag: bool = DEFAULTS["autodiag"]
+    interval: int = DEFAULTS["interval"]
+    enabled: bool = DEFAULTS["enabled"]
+    public: bool = DEFAULTS["enabled"]
+    runlocations: str | list = DEFAULTS["runlocations"]
+    homeloc: str | bool = DEFAULTS["homeloc"]
+    threshold: int = DEFAULTS["threshold"]
+    sens: int = DEFAULTS["sens"]
+    dep: str = DEFAULTS["dep"]
+    notifications: list = field(default_factory=list)
+    mute: bool = DEFAULTS["mute"]
+    type: str = "SSH"
+
+    def __post_init__(self):
+        self.type = "SSH"
+
+
+@dataclass
+class SslCheck:
+    """NodePing SSL check.
+
+    https://nodeping.com/ssl_check.html
+
+    Args:
+        target (str): URL or IP to target host
+        warningdays (int): number of days before to warn of an expiring SSL cert
+        servername (str): FQDN sent to SNI services in the SSL check
+        label (str): Name of the check that will be created
+        autodiag (bool): Enable/disable auto diagnostics for this check
+        interval (int): Interval in minutes to monitor target
+        enabled (bool): If created check will be enabled or disabled
+        public (bool): If the results for the created check will be public or not
+        runlocations (str|list): Which region to be originated from
+        homeloc (str|bool): Which probe in the region to originate the check from
+        threshold (int): Time in seconds for an acceptable response
+        sens (int): Rechecks to help avoid unecessary notifications
+        dep (str): ID of the check used for the notification dependency
+        notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
+        mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+    """
+
+    target: str
+    warningdays: int = 0
+    servername: str = ""
+    label: str = ""
+    autodiag: bool = DEFAULTS["autodiag"]
+    interval: int = DEFAULTS["interval"]
+    enabled: bool = DEFAULTS["enabled"]
+    public: bool = DEFAULTS["enabled"]
+    runlocations: str | list = DEFAULTS["runlocations"]
+    homeloc: str | bool = DEFAULTS["homeloc"]
+    threshold: int = DEFAULTS["threshold"]
+    sens: int = DEFAULTS["sens"]
+    dep: str = DEFAULTS["dep"]
+    notifications: list = field(default_factory=list)
+    mute: bool = DEFAULTS["mute"]
+    type: str = "SSL"
+
+    def __post_init__(self):
+        self.type = "SSL"
+
+
+@dataclass
+class WebsocketCheck:
+    """NodePing WEBSOCKET check.
+
+    https://nodeping.com/websocket_check.html
+
+    Args:
+        target (str): URL or IP to target host
+        invert (bool): Whether or not the response contains the contentstring
+        contentstring (str): string content expected in the response
+        data (str): Content to send. Can be JSON, XML, TXT, etc. Whatever the server understands
+        label (str): Name of the check that will be created
+        autodiag (bool): Enable/disable auto diagnostics for this check
+        interval (int): Interval in minutes to monitor target
+        enabled (bool): If created check will be enabled or disabled
+        public (bool): If the results for the created check will be public or not
+        runlocations (str|list): Which region to be originated from
+        homeloc (str|bool): Which probe in the region to originate the check from
+        threshold (int): Time in seconds for an acceptable response
+        sens (int): Rechecks to help avoid unecessary notifications
+        dep (str): ID of the check used for the notification dependency
+        notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
+        mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+    """
+
+    target: str
+    invert: bool = False
+    contentstring: str = ""
+    data: str = ""
+    label: str = ""
+    autodiag: bool = DEFAULTS["autodiag"]
+    interval: int = DEFAULTS["interval"]
+    enabled: bool = DEFAULTS["enabled"]
+    public: bool = DEFAULTS["enabled"]
+    runlocations: str | list = DEFAULTS["runlocations"]
+    homeloc: str | bool = DEFAULTS["homeloc"]
+    threshold: int = DEFAULTS["threshold"]
+    sens: int = DEFAULTS["sens"]
+    dep: str = DEFAULTS["dep"]
+    notifications: list = field(default_factory=list)
+    mute: bool = DEFAULTS["mute"]
+    type: str = "WEBSOCKET"
+
+    def __post_init__(self):
+        self.type = "WEBSOCKET"
+
+
+@dataclass
+class WhoisCheck:
+    """NodePing WHOIS check.
+
+    https://nodeping.com/whois_check.html
+
+    Args:
+        target (str): The FQDN to check
+        whoisserver (str): Server to query WHOIS information from
+        invert (bool): Whether or not the response contains the contentstring
+        contentstring (str): string content expected in the response
+        warningdays (int): number of days to warn of domain registration expiration
+        label (str): Name of the check that will be created
+        autodiag (bool): Enable/disable auto diagnostics for this check
+        interval (int): Interval in minutes to monitor target
+        enabled (bool): If created check will be enabled or disabled
+        public (bool): If the results for the created check will be public or not
+        runlocations (str|list): Which region to be originated from
+        homeloc (str|bool): Which probe in the region to originate the check from
+        threshold (int): Time in seconds for an acceptable response
+        sens (int): Rechecks to help avoid unecessary notifications
+        dep (str): ID of the check used for the notification dependency
+        notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
+        mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+    """
+
+    target: str
+    whoisserver: str = ""
+    ipv6: bool = False
+    invert: bool = False
+    contentstring: str = ""
+    warningdays: int = 0
+    label: str = ""
+    autodiag: bool = DEFAULTS["autodiag"]
+    interval: int = DEFAULTS["interval"]
+    enabled: bool = DEFAULTS["enabled"]
+    public: bool = DEFAULTS["enabled"]
+    runlocations: str | list = DEFAULTS["runlocations"]
+    homeloc: str | bool = DEFAULTS["homeloc"]
+    threshold: int = DEFAULTS["threshold"]
+    sens: int = DEFAULTS["sens"]
+    dep: str = DEFAULTS["dep"]
+    notifications: list = field(default_factory=list)
+    mute: bool = DEFAULTS["mute"]
+    type: str = "WHOIS"
+
+    def __post_init__(self):
+        self.type = "WHOIS"
