@@ -113,7 +113,7 @@ def post(url: str, data_dict: dict[str, str|int|bool]) -> dict[str, str|int|bool
 
 
 def put(url: str, data_dict: dict[str, str|int|bool]) -> dict[str, str|int|bool]:
-    """ Queries the NodePing API via PUT and updates a check
+    """ Queries the NodePing API with a PUT request.
 
     Accepts a URL and data and PUTs the results to NodePing. The
     URL must have a checkid in the URL that will be updated. This
