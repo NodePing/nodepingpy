@@ -15,7 +15,7 @@ from ._utils import API_URL
 ROUTE = "checks"
 
 
-def get_all(token: str, customerid: str|None) -> dict[str, str|int|bool]:
+def get_all(token: str, customerid: str | None = None) -> dict[str, str | int | bool]:
     """Get all checks that exist for the account or subaccount.
 
     Args:
@@ -31,7 +31,9 @@ def get_all(token: str, customerid: str|None) -> dict[str, str|int|bool]:
     return _utils.get(url, data)
 
 
-def get_all_uptime(token: str, customerid: str|None) -> dict[str, str|int|bool]:
+def get_all_uptime(
+    token: str, customerid: str | None = None
+) -> dict[str, str | int | bool]:
     """Get the uptime for all checks on the account or subaccount.
 
     Args:
@@ -50,9 +52,9 @@ def get_all_uptime(token: str, customerid: str|None) -> dict[str, str|int|bool]:
 def get_many(
     token: str,
     checkids: list[str],
-    customerid: str|None,
-    current: str|None,
-) -> dict[str, str|int|bool]:
+    customerid: str | None = None,
+    current: str | None = None,
+) -> dict[str, str | int | bool]:
     """Get information for all specified checks.
 
     Args:
@@ -75,7 +77,9 @@ def get_many(
     return _utils.get(url, data)
 
 
-def get_passing(token: str, customerid: str|None) -> dict[str, str|int|bool]:
+def get_passing(
+    token: str, customerid: str | None = None
+) -> dict[str, str | int | bool]:
     """Get active passing NodePing checks.
 
      Args:
@@ -90,7 +94,9 @@ def get_passing(token: str, customerid: str|None) -> dict[str, str|int|bool]:
     return _parse_pass_fail(get_all(token, customerid), 1)
 
 
-def get_failing(token: str, customerid: str|None) -> dict[str, str|int|bool]:
+def get_failing(
+    token: str, customerid: str | None = None
+) -> dict[str, str | int | bool]:
     """Get active failing NodePing checks.
 
      Args:
@@ -105,7 +111,9 @@ def get_failing(token: str, customerid: str|None) -> dict[str, str|int|bool]:
     return _parse_pass_fail(get_all(token, customerid), 0)
 
 
-def get_uptime_passing(token: str, customerid: str|None) -> dict[str, str|int|bool]:
+def get_uptime_passing(
+    token: str, customerid: str | None = None
+) -> dict[str, str | int | bool]:
     """Get the uptime for passing and active checks on the account or subaccount.
 
     Args:
@@ -121,7 +129,9 @@ def get_uptime_passing(token: str, customerid: str|None) -> dict[str, str|int|bo
     return _parse_pass_fail(_utils.get(url, data), 1)
 
 
-def get_uptime_failing(token: str, customerid: str|None) -> dict[str, str|int|bool]:
+def get_uptime_failing(
+    token: str, customerid: str | None = None
+) -> dict[str, str | int | bool]:
     """Get the uptime for failing and active checks on the account or subaccount.
 
     Args:
@@ -138,8 +148,8 @@ def get_uptime_failing(token: str, customerid: str|None) -> dict[str, str|int|bo
 
 
 def get_by_id(
-    token: str, checkid: str, customerid: str|None
-) -> dict[str, str|int|bool]:
+    token: str, checkid: str, customerid: str | None = None
+) -> dict[str, str | int | bool]:
     """Get a single NodePing check by ID.
 
     Args:
@@ -156,7 +166,9 @@ def get_by_id(
     return _utils.get(url, data)
 
 
-def get_active(token: str, customerid: str|None) -> dict[str, str|int|bool]:
+def get_active(
+    token: str, customerid: str | None = None
+) -> dict[str, str | int | bool]:
     """Get active (enabled) checks on the NodePing account or subaccount.
 
     Args:
@@ -172,7 +184,9 @@ def get_active(token: str, customerid: str|None) -> dict[str, str|int|bool]:
     return {k: v for k, v in checks.items() if v["enable"] == "active"}
 
 
-def get_inactive(token: str, customerid: str|None) -> dict[str, str|int|bool]:
+def get_inactive(
+    token: str, customerid: str | None = None
+) -> dict[str, str | int | bool]:
     """Get inactive (disabled) checks on the NodePing account or subaccount.
 
     Args:
@@ -189,8 +203,8 @@ def get_inactive(token: str, customerid: str|None) -> dict[str, str|int|bool]:
 
 
 def get_last_result(
-    token: str, checkid: str, customerid: str|None
-) -> dict[str, str|int|bool]:
+    token: str, checkid: str, customerid: str | None = None
+) -> dict[str, str | int | bool]:
     """Get the last result for the specified check.
 
     Args:
@@ -208,12 +222,14 @@ def get_last_result(
     return _utils.get(url, data)
 
 
-def create_check(token: str, args, customerid: str|None = None) -> dict[str,str|int|bool]:
+def create_check(
+    token: str, args, customerid: str | None = None
+) -> dict[str, str | int | bool]:
     """Create a NodePing check with parameters from specific dataclass check type.
 
     Args:
         token (str): NodePing API token
-        args (ClassVar): a dataclass such as AgentCheck, HttpCheck, PingCheck, etc.
+        args: a dataclass such as AgentCheck, HttpCheck, PingCheck, etc.
         customerid (str): subaccount ID
 
     Returns:
@@ -221,13 +237,131 @@ def create_check(token: str, args, customerid: str|None = None) -> dict[str,str|
     """
     url = "{}/{}".format(API_URL, ROUTE)
     data = asdict(args)
-    data["token"] = token
-    data = _utils.add_custid(data, customerid)
+    senddata = _utils.add_custid(data.update({"token": token}), customerid)
 
-    return _utils.post(url, data)
+    return _utils.post(url, senddata)
 
 
-def _parse_pass_fail(checks: dict[str, str|int|bool], pass_or_fail: int) -> dict[str, str|int|bool]:
+def update_check(token : str, checkid: str, checktype: str, args: dict[str, str | int | bool], customerid: str = None):
+    """Update an existing check on your NodePing account
+
+    Args:
+        token (str): NodePing API token
+        checkid (str): The check ID that is being updated
+        checktype (str): HTTP, PING, MTR, DNS, etc. check type
+        args (dict): fields being updated with their new values
+        customerid (str|None): subaccount ID
+
+    Returns:
+        dict: Contents of check ID with updated fields or error message
+    """
+    url = "{}/{}/{}".format(API_URL, ROUTE, checkid)
+    senddata = _utils.add_custid(
+        args.update({"type": checktype.upper(), "token": token}), customerid
+    )
+
+    return _utils.put(url, senddata)
+
+
+def delete_check(token: str, checkid: str, customerid: str | None = None) -> dict[str, str | bool]:
+    """ """
+    url = "{}/{}/{}".format(API_URL, ROUTE, checkid)
+    senddata = _utils.add_custid({"token": token}, customerid)
+
+    return _utils.delete(url, senddata)
+
+
+
+def mute_check(
+    token: str, checkid: str, duration: int | bool, customerid: str | None = None
+):
+    """Mute a NodePing check by check ID.
+
+    Args:
+        token (str): NodePing API token
+        checkid (str): The check ID that is being updated
+        duration (int|bool): True to mute infinitely, False to unmute, or a millisecond epoch timestamp in the future to specify when the check will be unmuted
+        customerid (str|None): subaccount ID
+
+    Returns:
+        dict: check info
+    """
+    url = "{}/{}/{}".format(API_URL, ROUTE, checkid)
+    senddata = _utils.add_custid({"token": token, "mute": duration}, customerid)
+
+    return _utils.put(url, senddata)
+
+
+def disable_by(
+    token: str,
+    disabletype: str,
+    string: str,
+    disable: bool,
+    customerid: str | None = None,
+) -> dict[str, int]:
+    """Find matching checks and disable it/them.
+
+    This will not re-enable checks that were previously disabled
+    using the 'enabled' element listed above.
+
+    Returned data:
+        `disableall` - number of checks disabled after command
+        `disabled` - number of checks currently disabled
+        `enabled` - number of checks currently enabled
+
+    Args:
+        token (str): NodePing API token
+        disabletype (str): "type", "label", or "target"
+            * type: regex that matches against the 'type' field of checks
+            * label: regex that matches against the 'label' field of checks
+            * target: regex that matches against the 'target' field of checks
+        string (str): the regex string to match the type, label, or target
+        disable (bool): re-enable check (False) or disable the check (True)
+        customerid (str|None): subaccount ID
+
+    Returns:
+        dict: check information {'disableall': x, 'disabled': y, 'enabled': z}
+    """
+    querystring = _utils.generate_querystring(
+        {disabletype: string, "disableall": disable}
+    )
+    url = "{}/{}?{}".format(API_URL, ROUTE, querystring)
+    data = _utils.add_custid({"token": token}, customerid)
+
+    return _utils.put(url, data)
+
+
+def disable_all(
+    token: str, disable: bool, customerid: str | None = None
+) -> dict[str, int]:
+    """Disable all checks on the account.
+
+    This will not re-enable checks that were previously disabled
+    using the 'enabled' element listed above.
+
+    Returned data:
+        `disableall` - number of checks disabled after command
+        `disabled` - number of checks currently disabled
+        `enabled` - number of checks currently enabled
+
+    Args:
+        token (str): NodePing API token
+        disable (bool): re-enable check (False) or disable the check (True)
+        customerid (str|None): subaccount ID
+
+    Returns:
+        dict: check information {'disableall': x, 'disabled': y, 'enabled': z}
+    """
+    querystring = _utils.generate_querystring({"disableall": disable})
+    url = "{}/{}?{}".format(API_URL, ROUTE, querystring)
+    data = _utils.add_custid({"token": token}, customerid)
+
+    return _utils.put(url, data)
+
+
+def _parse_pass_fail(
+    checks: dict[str, str | int | bool], pass_or_fail: int
+) -> dict[str, str | int | bool]:
     """Get all passing or failing active checks in NodePing result.
 
     Args:
