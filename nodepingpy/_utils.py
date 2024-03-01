@@ -3,6 +3,11 @@
 """ Helper functions to reduce code reuse and misc other uses
 """
 
+from typing import Any
+from nodepingpy.nptypes.contacttypes import Contact, ManyContacts
+#from nodepingpy.nptypes.contacttypes import Contact, ManyContacts
+from nptypes import *
+
 from time import time
 from urllib.parse import urlencode
 from urllib.error import HTTPError as httperror
@@ -49,7 +54,7 @@ def create_timestamp(duration):
     return int(time() * 1000) + (duration * 1000)
 
 
-def get(url: str, data_dict: dict[str, str|int|bool]) -> dict[str, str|int|bool]:
+def get(url: str, data_dict: dict[str, str|int|bool]) -> dict[str,Any]:
     """Queries the URL with a GET request with JSON body.
 
     Does an HTTP GET request and returns an expected JSON payload
@@ -80,7 +85,7 @@ def get(url: str, data_dict: dict[str, str|int|bool]) -> dict[str, str|int|bool]
     return json.loads(json_bytes.decode("utf-8"))
 
 
-def post(url: str, data_dict: dict[str, str|int|bool]) -> dict[str, str|int|bool]:
+def post(url: str, data_dict: dict[str, str|int|bool]) -> dict:
     """Queries the NodePing API via POST and creates a check
 
     Accepts a URL and data and POSTs the results to NodePing
@@ -95,7 +100,7 @@ def post(url: str, data_dict: dict[str, str|int|bool]) -> dict[str, str|int|bool
         dict: Response from API
     """
 
-    data_none_stripped = {k: v for k, v in data_dict.items() if v != None}
+    data_none_stripped = {k: v for k, v in data_dict.items() if v != None or v != ""}
     json_data = json.dumps(data_none_stripped).encode("utf-8")
 
     req = Request(url)
@@ -112,7 +117,7 @@ def post(url: str, data_dict: dict[str, str|int|bool]) -> dict[str, str|int|bool
     return json.loads(json_bytes.decode("utf-8"))
 
 
-def put(url: str, data_dict: dict[str, str|int|bool]) -> dict[str, str|int|bool]:
+def put(url: str, data_dict: dict[str, str|int|bool]) -> dict:
     """ Queries the NodePing API with a PUT request.
 
     Accepts a URL and data and PUTs the results to NodePing. The
@@ -145,7 +150,7 @@ def put(url: str, data_dict: dict[str, str|int|bool]) -> dict[str, str|int|bool]
     return json.loads(json_bytes.decode("utf-8"))
 
 
-def delete(url: str, data_dict: dict[str, str|int|bool]) -> dict[str, str|int|bool]:
+def delete(url: str, data_dict: dict[str, str|int|bool]) -> dict[str, Any]:
     """ Queries the NodePing API via DELETE and returns its result
 
     Accepts a URL to the NodePing API to do a delete. A dictionary
