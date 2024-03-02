@@ -3,6 +3,7 @@
 """NodePing check types."""
 
 from dataclasses import dataclass, field
+from typing import TypedDict
 
 
 DEFAULTS = {
@@ -1663,3 +1664,57 @@ class WhoisCheck:
 
     def __post_init__(self):
         self.type = "WHOIS"
+
+
+class GetCheck(TypedDict):
+    _id: str
+    autodiag: bool
+    created: int
+    customer_id: str
+    dep: bool
+    enable: str
+    firstdown: int
+    homeloc: bool | str
+    interval: int | float
+    label: str
+    modified: int
+    mute: bool | int
+    notifications: list
+    parameters: dict
+    public: bool
+    queue: str
+    runlocations: bool
+    state: int
+    status: str
+    suspacct: bool
+    type: str
+    uuid: str
+
+class UptimeInfo(TypedDict):
+    down: str | int
+    enabled: int
+    uptime: float
+
+class GetCheckUptime(GetCheck):
+    uptime: dict[str, UptimeInfo]
+
+class ModifiedCheck(TypedDict):
+    _id: str
+    autodiag: bool
+    change: int
+    created: int
+    customer_id: str
+    dep: bool
+    enable: str
+    homeloc: bool | str
+    interval: int | float
+    label: str
+    modified: int
+    mute: bool | int
+    notifications: list
+    parameters: dict
+    public: bool
+    runlocations: bool
+    status: str
+    type: str
+    uuid: str
