@@ -4,9 +4,8 @@
 """
 
 from typing import Any
-from nodepingpy.nptypes.contacttypes import Contact, ManyContacts
+from nodepingpy.nptypes.contacttypes import *
 #from nodepingpy.nptypes.contacttypes import Contact, ManyContacts
-from nptypes import *
 
 from time import time
 from urllib.parse import urlencode
@@ -19,7 +18,7 @@ import json
 API_URL = "https://api.nodeping.com/api/1"
 
 
-def add_custid(data: dict[str, str|int|bool], customerid: str|None = None) -> dict[str, str|int|bool]:
+def add_custid(data: dict[str, str|int|bool], customerid: str|None = None) -> dict:
     """If the customerid isn't None, add it to data
     
     Args:
@@ -35,7 +34,7 @@ def add_custid(data: dict[str, str|int|bool], customerid: str|None = None) -> di
     return data
 
 
-def generate_querystring(args: dict[str, str|int|bool]) -> str:
+def generate_querystring(args: dict) -> str:
     """Generates a querystring from a dict.
 
     Removes all `None` values and escaples invalid strings.
@@ -54,7 +53,7 @@ def create_timestamp(duration):
     return int(time() * 1000) + (duration * 1000)
 
 
-def get(url: str, data_dict: dict[str, str|int|bool]) -> dict[str,Any]:
+def get(url: str, data_dict: dict[str, str|int|bool|None]) -> dict:
     """Queries the URL with a GET request with JSON body.
 
     Does an HTTP GET request and returns an expected JSON payload
@@ -85,7 +84,7 @@ def get(url: str, data_dict: dict[str, str|int|bool]) -> dict[str,Any]:
     return json.loads(json_bytes.decode("utf-8"))
 
 
-def post(url: str, data_dict: dict[str, str|int|bool]) -> dict:
+def post(url: str, data_dict: dict[str, str|int|bool|None]) -> dict:
     """Queries the NodePing API via POST and creates a check
 
     Accepts a URL and data and POSTs the results to NodePing
@@ -100,7 +99,8 @@ def post(url: str, data_dict: dict[str, str|int|bool]) -> dict:
         dict: Response from API
     """
 
-    data_none_stripped = {k: v for k, v in data_dict.items() if v != None or v != ""}
+    print("Data dict is: " + str(data_dict))
+    data_none_stripped = {k: v for k, v in data_dict.items() if bool(v) or isinstance(v, bool)}
     json_data = json.dumps(data_none_stripped).encode("utf-8")
 
     req = Request(url)
@@ -117,7 +117,7 @@ def post(url: str, data_dict: dict[str, str|int|bool]) -> dict:
     return json.loads(json_bytes.decode("utf-8"))
 
 
-def put(url: str, data_dict: dict[str, str|int|bool]) -> dict:
+def put(url: str, data_dict: dict[str, str|int|bool|None]) -> dict:
     """ Queries the NodePing API with a PUT request.
 
     Accepts a URL and data and PUTs the results to NodePing. The
@@ -132,7 +132,7 @@ def put(url: str, data_dict: dict[str, str|int|bool]) -> dict:
         dict: Response from API
     """
 
-    data_none_stripped = {k: v for k, v in data_dict.items() if v != None}
+    data_none_stripped = {k: v for k, v in data_dict.items() if bool(v) or isinstance(v, bool)}
     json_data = json.dumps(data_none_stripped).encode('utf-8')
 
     req = Request(url)
