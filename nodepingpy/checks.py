@@ -8,6 +8,7 @@ disabled checks, and last results for a check.
 
 from dataclasses import asdict
 
+from .nptypes import checktypes
 from . import _utils
 from ._utils import API_URL
 
@@ -15,7 +16,9 @@ from ._utils import API_URL
 ROUTE = "checks"
 
 
-def get_all(token: str, customerid: str | None = None) -> dict[str, str | int | bool]:
+def get_all(
+    token: str, customerid: str | None = None
+) -> dict[str, checktypes.GetCheck]:
     """Get all checks that exist for the account or subaccount.
 
     Args:
@@ -33,7 +36,7 @@ def get_all(token: str, customerid: str | None = None) -> dict[str, str | int | 
 
 def get_all_uptime(
     token: str, customerid: str | None = None
-) -> dict[str, str | int | bool]:
+) -> dict[str, checktypes.GetCheckUptime]:
     """Get the uptime for all checks on the account or subaccount.
 
     Args:
@@ -54,7 +57,7 @@ def get_many(
     checkids: list[str],
     customerid: str | None = None,
     current: str | None = None,
-) -> dict[str, str | int | bool]:
+) -> dict[str, checktypes.GetCheck]:
     """Get information for all specified checks.
 
     Args:
@@ -72,14 +75,17 @@ def get_many(
     url = "{}/{}?{}".format(
         API_URL, ROUTE, _utils.generate_querystring({"id": ",".join(checkids)})
     )
-    data = _utils.add_custid({"token": token, "current": current}, customerid)
+    data = _utils.add_custid({"token": token}, customerid)
+
+    if current:
+        data["current"] = current
 
     return _utils.get(url, data)
 
 
 def get_passing(
     token: str, customerid: str | None = None
-) -> dict[str, str | int | bool]:
+) -> dict[str, checktypes.GetCheck]:
     """Get active passing NodePing checks.
 
      Args:
@@ -96,7 +102,7 @@ def get_passing(
 
 def get_failing(
     token: str, customerid: str | None = None
-) -> dict[str, str | int | bool]:
+) -> dict[str, checktypes.GetCheck]:
     """Get active failing NodePing checks.
 
      Args:
@@ -113,7 +119,7 @@ def get_failing(
 
 def get_uptime_passing(
     token: str, customerid: str | None = None
-) -> dict[str, str | int | bool]:
+) -> dict[str, checktypes.GetCheckUptime]:
     """Get the uptime for passing and active checks on the account or subaccount.
 
     Args:
@@ -131,7 +137,7 @@ def get_uptime_passing(
 
 def get_uptime_failing(
     token: str, customerid: str | None = None
-) -> dict[str, str | int | bool]:
+) -> dict[str, checktypes.GetCheckUptime]:
     """Get the uptime for failing and active checks on the account or subaccount.
 
     Args:
@@ -149,7 +155,7 @@ def get_uptime_failing(
 
 def get_by_id(
     token: str, checkid: str, customerid: str | None = None
-) -> dict[str, str | int | bool]:
+) -> checktypes.GetCheck:
     """Get a single NodePing check by ID.
 
     Args:
@@ -168,7 +174,7 @@ def get_by_id(
 
 def get_active(
     token: str, customerid: str | None = None
-) -> dict[str, str | int | bool]:
+) -> dict[str, checktypes.GetCheck]:
     """Get active (enabled) checks on the NodePing account or subaccount.
 
     Args:
@@ -186,7 +192,7 @@ def get_active(
 
 def get_inactive(
     token: str, customerid: str | None = None
-) -> dict[str, str | int | bool]:
+) -> dict[str, checktypes.GetCheck]:
     """Get inactive (disabled) checks on the NodePing account or subaccount.
 
     Args:
@@ -204,7 +210,7 @@ def get_inactive(
 
 def get_last_result(
     token: str, checkid: str, customerid: str | None = None
-) -> dict[str, str | int | bool]:
+) -> checktypes.GetCheckUptime:
     """Get the last result for the specified check.
 
     Args:
@@ -224,7 +230,7 @@ def get_last_result(
 
 def create_check(
     token: str, args, customerid: str | None = None
-) -> dict[str, str | int | bool]:
+) -> checktypes.ModifiedCheck:
     """Create a NodePing check with parameters from specific dataclass check type.
 
     Args:
@@ -237,12 +243,18 @@ def create_check(
     """
     url = "{}/{}".format(API_URL, ROUTE)
     data = asdict(args)
-    senddata = _utils.add_custid(data.update({"token": token}), customerid)
+    data.update({"token": token, "customerid": customerid})
 
-    return _utils.post(url, senddata)
+    return _utils.post(url, data)
 
 
-def update_check(token : str, checkid: str, checktype: str, args: dict[str, str | int | bool], customerid: str = None):
+def update_check(
+    token: str,
+    checkid: str,
+    checktype: str,
+    args: dict[str, str | int | bool | None],
+    customerid: str | None = None,
+) -> checktypes.ModifiedCheck:
     """Update an existing check on your NodePing account
 
     Args:
@@ -256,14 +268,14 @@ def update_check(token : str, checkid: str, checktype: str, args: dict[str, str 
         dict: Contents of check ID with updated fields or error message
     """
     url = "{}/{}/{}".format(API_URL, ROUTE, checkid)
-    senddata = _utils.add_custid(
-        args.update({"type": checktype.upper(), "token": token}), customerid
-    )
+    args.update({"type": checktype.upper(), "token": token, "customerid": customerid})
 
-    return _utils.put(url, senddata)
+    return _utils.put(url, args)
 
 
-def delete_check(token: str, checkid: str, customerid: str | None = None) -> dict[str, str | bool]:
+def delete_check(
+    token: str, checkid: str, customerid: str | None = None
+) -> dict[str, str | bool]:
     """ """
     url = "{}/{}/{}".format(API_URL, ROUTE, checkid)
     senddata = _utils.add_custid({"token": token}, customerid)
@@ -271,10 +283,9 @@ def delete_check(token: str, checkid: str, customerid: str | None = None) -> dic
     return _utils.delete(url, senddata)
 
 
-
 def mute_check(
     token: str, checkid: str, duration: int | bool, customerid: str | None = None
-):
+) -> checktypes.ModifiedCheck:
     """Mute a NodePing check by check ID.
 
     Args:
@@ -360,8 +371,9 @@ def disable_all(
 
 
 def _parse_pass_fail(
-    checks: dict[str, str | int | bool], pass_or_fail: int
-) -> dict[str, str | int | bool]:
+    checks: dict[str, checktypes.GetCheck | checktypes.GetCheckUptime],
+    pass_or_fail: int,
+) -> dict:
     """Get all passing or failing active checks in NodePing result.
 
     Args:
