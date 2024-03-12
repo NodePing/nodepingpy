@@ -11,14 +11,16 @@ from ._utils import API_URL
 ROUTE = "contacts"
 
 
-def get_all(token: str, customerid: str | None = None) -> dict[str, contacttypes.ManyContacts]:
+def get_all(
+    token: str, customerid: str | None = None
+) -> dict[str, contacttypes.ManyContacts]:
     """Get all contacts on the account or subaccount.
 
     https://nodeping.com/docs-api-contacts.html#get
 
     Args:
         token (str): NodePing API token
-        customerid (str): subaccount ID
+        customerid (str | None): subaccount ID
 
     Returns:
         dict: All contacts on NodePing account or subaccount.
@@ -38,7 +40,7 @@ def get_one(
     Args:
         token (str): NodePing API token
         contactid (str): The `_id` for the contact
-        customerid (str): subaccount ID
+        customerid (str | None): subaccount ID
 
     Returns:
         dict: All contacts on NodePing account or subaccount.
@@ -61,7 +63,7 @@ def get_by_type(
     Args:
         token (str): NodePing API token
         contacttype (str): sms, email, webhook, etc.
-        customerid (str): subaccount ID
+        customerid (str | None): subaccount ID
 
     Returns:
         dict: All contacts on NodePing account or subaccount of type `contacttype`
@@ -132,9 +134,7 @@ def create(
     return _utils.post("{}/{}/{}".format(API_URL, ROUTE, customerid), data)
 
 
-def update(
-    token: str, cid: str, args: dict, customerid: str
-) -> dict:
+def update(token: str, cid: str, args: dict, customerid: str | None = None) -> dict:
     """Update an existing contact.
 
     NOTE: If you are using the addresses argument to update an existing
@@ -145,7 +145,7 @@ def update(
     Args:
         token (str): NodePing API token
         cid (str): The contact ID of the contact that is being changed
-        customerid (str): subaccount ID
+        customerid (str | None): subaccount ID
 
     Returns:
         dict: The contents of the updated contact
@@ -163,7 +163,21 @@ def mute_contact(
     duration: int | bool,
     customerid: str | None = None,
 ) -> dict:
-    """ """
+    """Mute a contact.
+
+    Mute or unmute a contact indefinitely, or mute it up until a set timestamp.
+    Note that to update the contact, you must return the whole contact,
+    otherwise you will lose contact methods in the update.
+
+    Args:
+        token (str): NodePing API token
+        contact_dict (dict): The entire dict for the contact.
+        duration (int|bool): true to mute infinitely, false to unmute, or a unix timestamp
+        customerid (str | None): subaccount ID
+
+    Returns:
+        dict: The contents of the contact with the applied mute information
+    """
     addresses_muted = {}
     cid = next(iter(contact_dict.keys()))
     value = next(iter(contact_dict.values()))
@@ -181,10 +195,26 @@ def mute_contact(
 def mute_contact_method(
     token: str,
     contact_dict: dict[str, list],
+    method_id: str,
     duration: int | bool,
     customerid: str | None = None,
 ):
-    """ """
+    """Mute a contact method of a contact.
+
+    Mute or unmute a single contact method indefinitely, or mute it up until a set timestamp.
+    Note that to update the contact, you must return the whole contact,
+    otherwise you will lose contact methods in the update.
+
+    Args:
+        token (str): NodePing API token
+        contact_dict (dict): The entire dict for the contact.
+        method_id (str): the contact method id (e.g - K5SP9CQP found in the addresses object)
+        duration (int|bool): true to mute infinitely, false to unmute, or a unix timestamp
+        customerid (str | None): subaccount ID
+
+    Returns:
+        dict: The contents of the contact with the applied mute information
+    """
     addresses_muted = {}
     cid = next(iter(contact_dict.keys()))
     value = next(iter(contact_dict.values()))
@@ -197,3 +227,38 @@ def mute_contact_method(
     )
 
     return _utils.put("{}/{}/{}".format(API_URL, ROUTE, cid), data)
+
+
+def delete_contact(token: str, cid: str, customerid: str | None = None) -> dict:
+    """Delete a contact on a NodePing account.
+
+     Args:
+        token (str): NodePing API token
+        cid (str): the contact id
+        customerid (str | None): subaccount ID
+
+    Returns:
+        dict: Confirmation of a sucessful or failed deletion.
+    """
+    data = _utils.add_custid({"token": token}, customerid)
+
+    return _utils.delete("{}/{}/{}".format(API_URL, ROUTE, cid), data)
+
+
+def reset_password(token: str, cid: str, customerid: str | None = None) -> dict:
+    """Reset the password for the specified contact.
+
+    You can get the contact_id by querying the API with the get_all
+    function. The ID would look something like this: "201205050153W2Q4C-OVDN7"
+
+    Args:
+        token (str): NodePing API token
+        cid (str): the contact id
+        customerid (str | None): subaccount ID
+
+    Returns:
+        dict: Confirmation of a successful or failed password reset.
+    """
+    data = _utils.add_custid({"token": token}, customerid)
+
+    return _utils.get("{}/{}/{}?action=RESETPASSWORD".format(API_URL, ROUTE, cid), data)
