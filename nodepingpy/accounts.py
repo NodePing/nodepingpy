@@ -17,6 +17,17 @@ ROUTE = "accounts"
 
 @dataclass
 class Account:
+    """Account creation args.
+
+    Args:
+        name (str): Name for the subaccount
+        contactname (str): name for the primary contact of the subaccount
+        email (str): email address of the primary contact for the subaccount
+        timezone (str): GMT offset for the subaccount ("-7", "+3", etc.)
+        location (str): Default region for checks ('eur', 'nam', 'lam', 'eao', 'wlw')
+        emailme (bool): True to opt-in the subaccount for service email notifications
+        autodiagnotifications (bool): enable/disable account-wide emails for automated diagnostics
+    """
     name: str
     contactname: str
     email: str
@@ -28,13 +39,22 @@ class Account:
 
 @dataclass
 class AccountUpdate:
-    customerid: str
-    name: str
-    timezone: str
-    location: str
-    emailme: bool
-    status: str
-    autodiagnotifications: bool
+    """Account update args.
+
+    Args:
+        name (str): Name for the subaccount
+        timezone (str): GMT offset for the subaccount ("-7", "+3", etc.)
+        location (str): Default region for checks ('eur', 'nam', 'lam', 'eao', 'wlw')
+        emailme (bool): True to opt-in the subaccount for service email notifications
+        status (str): "Active" or "Suspend", not supported for parent accounts
+        autodiagnotifications (bool): enable/disable account-wide emails for automated diagnostics
+    """
+    name: str | None = None
+    timezone: str | None = None
+    location: str | None = None
+    emailme: bool | None = None
+    status: str | None = None
+    autodiagnotifications: bool | None = None
 
 
 def info(token: str, customerid: str | None = None) -> dict[str, str | int | bool]:
@@ -71,29 +91,6 @@ def is_valid(token: str, customerid: str | None = None) -> bool:
         return False
 
 
-def populate_account(token: str, customerid: str) -> AccountUpdate:
-    """Get account information and add it to an AccountUpdate class.
-
-    Args:
-        token (str): NodePing API token
-        customerid (str): subaccount ID
-
-    Returns:
-        AccountUpdate: Populated with account information for easy modification
-    """
-    account_info = info(token, customerid)
-    name = account_info["customer_name"]
-    timezone = account_info["timezone"]
-    location = account_info["defaultlocations"][0]
-    emailme = account_info["emailme"]
-    status = account_info["status"]
-    autodiagnotifications = account_info["autodiagnotifications"]
-
-    return AccountUpdate(
-        customerid, name, timezone, location, emailme, status, autodiagnotifications
-    )
-
-
 def create_subaccount(token: str, args: Account) -> dict[str, str | int | bool]:
     """Create a subaccount under your NodePing account.
 
@@ -125,9 +122,9 @@ def update_account(
     """
     data = asdict(args)
     data["token"] = token
-    post_data = _utils.add_custid(data, customerid)
+    put_data = _utils.add_custid(data, customerid)
 
-    return _utils.put("{}/{}".format(API_URL, ROUTE), post_data)
+    return _utils.put("{}/{}".format(API_URL, ROUTE), put_data)
 
 
 def delete_subaccount(token: str, customerid: str):
