@@ -28,6 +28,7 @@ class Account:
         emailme (bool): True to opt-in the subaccount for service email notifications
         autodiagnotifications (bool): enable/disable account-wide emails for automated diagnostics
     """
+
     name: str
     contactname: str
     email: str
@@ -49,6 +50,7 @@ class AccountUpdate:
         status (str): "Active" or "Suspend", not supported for parent accounts
         autodiagnotifications (bool): enable/disable account-wide emails for automated diagnostics
     """
+
     name: str | None = None
     timezone: str | None = None
     location: str | None = None
@@ -108,7 +110,6 @@ def create_subaccount(token: str, args: Account) -> dict[str, str | int | bool]:
 
 
 def update_account(
-
     token: str, args: AccountUpdate, customerid: str | None = None
 ) -> dict[str, str | int | bool]:
     """Update a NodePing account or subaccount.
@@ -129,7 +130,7 @@ def update_account(
 
 def delete_subaccount(token: str, customerid: str):
     """Delete a NodePing subaccount.
-    
+
     Args:
         token (str): NodePing API token
         customerid (str): subaccount ID
@@ -147,7 +148,7 @@ def disable_notifications(
     token: str, accountsupressall: bool, customerid: str | None = None
 ) -> dict[str, str | int | bool]:
     """Disable notifications on an account or subaccount.
-    
+
     Args:
         token (str): NodePing API token
         accountsupressall (bool): True to disable notifcations, False to enable
