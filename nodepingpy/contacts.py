@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-""" Get contacts on your NodePing account."""
+""" Manage contacts on your NodePing account."""
 
 
-from nptypes import contacttypes
+from .nptypes import contacttypes
 from . import _utils
 from ._utils import API_URL
 
@@ -88,8 +88,8 @@ def get_by_type(
 def create(
     token: str,
     customerid: str,
+    custrole: str,
     name: str = "",
-    custrole: str = "view",
     newaddresses: list | None = None,
 ) -> dict:
     """Create a new contact on your account or subaccount.
@@ -159,7 +159,7 @@ def update(token: str, cid: str, args: dict, customerid: str | None = None) -> d
 
 def mute_contact(
     token: str,
-    contact_dict: dict[str, str | bool],
+    contact_dict: dict,
     duration: int | bool,
     customerid: str | None = None,
 ) -> dict:
@@ -178,23 +178,20 @@ def mute_contact(
     Returns:
         dict: The contents of the contact with the applied mute information
     """
-    addresses_muted = {}
-    cid = next(iter(contact_dict.keys()))
-    value = next(iter(contact_dict.values()))
-    for contact_method, address in value["addresses"].items():
+    for _, address in contact_dict["addresses"].items():
         address["mute"] = duration
-        addresses_muted.update({contact_method: address})
 
+    addresses = contact_dict["addresses"]
     data = _utils.add_custid(
-        {"token": token, "id": cid, "addresses": addresses_muted}, customerid
+        {"token": token, "addresses": addresses}, customerid
     )
 
-    return _utils.put("{}/{}/{}".format(API_URL, ROUTE, cid), data)
+    return _utils.put("{}/{}/{}".format(API_URL, ROUTE, contact_dict["_id"]), data)
 
 
 def mute_contact_method(
     token: str,
-    contact_dict: dict[str, list],
+    contact_dict: dict,
     method_id: str,
     duration: int | bool,
     customerid: str | None = None,
@@ -207,7 +204,7 @@ def mute_contact_method(
 
     Args:
         token (str): NodePing API token
-        contact_dict (dict): The entire dict for the contact.
+        contact_dict (dict): The entire dict for the contact, such as one fetched with get_one()
         method_id (str): the contact method id (e.g - K5SP9CQP found in the addresses object)
         duration (int|bool): true to mute infinitely, false to unmute, or a unix timestamp
         customerid (str | None): subaccount ID
@@ -215,18 +212,11 @@ def mute_contact_method(
     Returns:
         dict: The contents of the contact with the applied mute information
     """
-    addresses_muted = {}
-    cid = next(iter(contact_dict.keys()))
-    value = next(iter(contact_dict.values()))
-    for contact_method, address in value["addresses"].items():
-        address["mute"] = duration
-        addresses_muted.update({contact_method: address})
+    contact_dict["addresses"][method_id]["mute"] = duration 
+    addresses = contact_dict["addresses"]
+    data = _utils.add_custid({"token": token, "addresses": addresses}, customerid)
 
-    data = _utils.add_custid(
-        {"token": token, "id": cid, "addresses": addresses_muted}, customerid
-    )
-
-    return _utils.put("{}/{}/{}".format(API_URL, ROUTE, cid), data)
+    return _utils.put("{}/{}/{}".format(API_URL, ROUTE, contact_dict["_id"]), data)
 
 
 def delete_contact(token: str, cid: str, customerid: str | None = None) -> dict:
