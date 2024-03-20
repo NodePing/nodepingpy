@@ -117,40 +117,34 @@ def get_failing(
     return _parse_pass_fail(get_all(token, customerid), 0)
 
 
-def get_uptime_passing(
-    token: str, customerid: str | None = None
+def get_uptime(
+    token: str,
+    checks: str | list,
+    customerid: str | None = None,
+    start: str | None = None,
 ) -> dict[str, checktypes.GetCheckUptime]:
     """Get the uptime for passing and active checks on the account or subaccount.
 
     Args:
         token (str): NodePing API token
+        checks (str|list): "all" for all checks or a list of checks to get
         customerid (str): subaccount ID
+        start (str): an optional %Y-%m-%d timestamp of when to start getting uptime results
 
     Returns:
         dict: All passing checks and their uptime on NodePing account or subaccount.
     """
-    url = "{}/{}".format(API_URL, ROUTE)
-    data = _utils.add_custid({"token": token, "uptime": True}, customerid)
+    if isinstance(checks, str) and checks.upper() == "ALL":
+        url = "{}/{}".format(API_URL, ROUTE)
+    else:
+        url = "{}/{}?{}".format(
+            API_URL, ROUTE, _utils.generate_querystring({"id": ",".join(checks)})
+        )
 
-    return _parse_pass_fail(_utils.get(url, data), 1)
+    data = {"token": token, "uptime": True, "start": start}
+    senddata = _utils.add_custid(data, customerid)
 
-
-def get_uptime_failing(
-    token: str, customerid: str | None = None
-) -> dict[str, checktypes.GetCheckUptime]:
-    """Get the uptime for failing and active checks on the account or subaccount.
-
-    Args:
-        token (str): NodePing API token
-        customerid (str): subaccount ID
-
-    Returns:
-        dict: All failing checks and their uptime on NodePing account or subaccount.
-    """
-    url = "{}/{}".format(API_URL, ROUTE)
-    data = _utils.add_custid({"token": token, "uptime": True}, customerid)
-
-    return _parse_pass_fail(_utils.get(url, data), 0)
+    return _utils.get(url, senddata)
 
 
 def get_by_id(
@@ -313,7 +307,7 @@ def disable_by(
     """Find matching checks and disable it/them.
 
     This will not re-enable checks that were previously disabled
-    using the 'enabled' element listed above.
+    using the 'enabled' element.
 
     Returned data:
         `disableall` - number of checks disabled after command
@@ -348,7 +342,7 @@ def disable_all(
     """Disable all checks on the account.
 
     This will not re-enable checks that were previously disabled
-    using the 'enabled' element listed above.
+    using the 'enabled' element
 
     Returned data:
         `disableall` - number of checks disabled after command
