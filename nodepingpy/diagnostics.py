@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Request diagnostic information from a profe or AGENT."""
+"""Request diagnostic information from a probe or AGENT."""
 
 from . import _utils
 from ._utils import API_URL
