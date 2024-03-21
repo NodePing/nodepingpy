@@ -29,6 +29,10 @@ ID might look like this:
 >>> accounts.info(token, customerid)
 ```
 
+For additional information visit the API documentation:
+
+https://nodeping.com/docs-api-overview.html
+
 ## Installation
 
 To install this package, run:
