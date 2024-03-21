@@ -843,3 +843,102 @@ token = "my-token"
 args = notifications.Notification("201205050153W2Q4C-0J2HSIRF", 24)
 notifications.get(token, args)
 ```
+
+## Results Module
+
+Can be imported with
+
+``` py
+from nodepingpy import results
+```
+
+### Get Results
+
+This example gets up to the last 300 results, and starting at 2024-03-10
+
+``` py
+from nodepingpy import results
+from nodepingpy.nptypes.resulttypes import Results
+token = "my-token"
+id = "201205050153W2Q4C-0J2HSIRF"
+args = Results(limit=300, start="YYYY-MM-DD")
+results.get(token, id, args)
+```
+
+This same function is used to also get `resulttypes.Uptime` and `resulttypes.Events`.
+
+### Get Current Results
+
+Get current events happening for checks
+
+``` py
+from nodepingpy import results
+token = "my-token"
+results.get_current(token)
+```
+
+### Get Summary
+
+Retrieves hourly summary information about the results for a specific check.
+
+``` py
+from nodepingpy import results
+token = "my-token"
+id = "201205050153W2Q4C-0J2HSIRF"
+results.get_summary(token, id)
+```
+
+## Schedules Module
+
+Can be imported with
+
+``` py
+from nodepingpy import schedules
+```
+
+### Get Schedules
+
+Get all schedules
+
+``` py
+from nodepingpy import schedules
+token = "my-token"
+schedules.get_all(token)
+```
+
+Get one schedule. These are given names, and are not gotten by an ID
+
+``` py
+from nodepingpy import schedules
+token = "my-token"
+schedule_name = "Day"
+schedules.get(token, schedule_name)
+```
+
+### Create or Update a Schedule
+
+To create/update a schedule, a dictionary needs to be provided with start/stop information
+for each day of the week.
+
+``` py
+from nodepingpy import schedules
+token = "my-token"
+schedule_name = "WorkDay"
+schedule = {'data': {'friday': {'disabled': True},
+                     'monday': {'allday': True},
+                     'saturday': {'exclude': False, 'time1': '6:00', 'time2': '18:00'},
+                     'sunday': {'exclude': False, 'time1': '6:00', 'time2': '18:00'},
+                     'thursday': {'exclude': False, 'time1': '6:00', 'time2': '18:00'},
+                     'tuesday': {'exclude': False, 'time1': '6:00', 'time2': '18:00'},
+                     'wednesday': {'exclude': False, 'time1': '6:00', 'time2': '18:00'}}}
+schedules.create(token, schedule_name, schedule)
+```
+
+### Delete a Schedule
+
+``` py
+from nodepingpy import schedules
+token = "my-token"
+schedule_name = "Day"
+schedules.delete(token, schedule_name)
+```
