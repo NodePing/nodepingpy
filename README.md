@@ -15,7 +15,7 @@ name.
 You can set these variables, for example, like so:
 
 ``` python
-token = (my-api-token"
+token = "my-api-token"
 customerid = "your-subaccount-id"
 ```
 
@@ -447,6 +447,26 @@ contents, and then PUT them back. To add addresses to the contact, you will use 
 >>> contacts.update(token, contactid, {"addresses": addresses, "newaddresses": newaddresses})
 ```
 
+### Removing a Contact Method
+
+To remove a contact method, take the existing contact methods in a contact, remove it from the
+dictionary of addresses, and then submit the updated contact methods. For example
+
+``` py
+>>> from nodepingpy import contacts
+>>> from pprint import pprint
+>>> token = "my-token"
+>>> contactid = "201205050153W2Q4C-BKPGH"
+>>> result = contacts.get_one(token, contactid)
+>>> addresses = result["addresses"]
+>>> pprint(addresses)
+{'JMMARFHQ': {'accountsupressall': False, 'address': 'newme@example.com'},
+ 'NMYW1XC1': {'accountsupressall': False, 'address': 'newme2@example.com'},
+ 'P080YGYO': {'accountsuppressall': False, 'address': '321444777'}}
+>>> del addresses["JMMARFHQ"]
+>>> contacts.update(token, contactid, {"addresses": addresses})
+```
+
 ### Muting a Contact Method
 
 Muting a contact method involves muting not a whole contact, but just one of the contact methods.
@@ -496,4 +516,330 @@ contactid = "201205050153W2Q4C-BKPGH"
 contacts.reset_password(token, contactid)
 ```
 
+## Contactgroups Module
 
+To use this module, import it into your project
+
+``` py
+from nodepingpy import contactgroups
+```
+
+### Get All Contact Groups
+
+``` py
+from nodepingpy import contactgroups
+token = "my-token"
+contactgroups.get_all(token)
+```
+
+### Get One ContactGroup
+
+``` py
+from nodepingpy import contactgroups
+token = "my-token"
+id = "201205050153W2Q4C-G-3QJWG"
+contactgroups.get(token, id)
+```
+
+### Create a Contact Group
+
+To create a contact group, a list of contact methods are needed.
+For example above in updating a contact, you would use the address
+keys, like below, and create a contact group called "sysadmins",
+for example.
+
+```
+from nodepingpy import contactgroups
+token = "my-token"
+contacts = ["JMMARFHQ", "NMYW1XC1", "P080YGYO"]
+name = "sysadmins"
+contactgroups.create(token, name, contacts)
+```
+
+### Update a Contact Group
+
+Updating an existing contactgroup takes a dictionary as an argument
+with keys `name` and/or `members` as a key, like the arguments in
+creating a contactgroup.
+
+```
+from nodepingpy import contactgroups
+token = "my-token"
+id = "201205050153W2Q4C-G-3QJWG"
+args = {"name": "SysAdmin", "members: ["JMMARFHQ", "NMYW1XC1"]}
+contactgroups.update(token, id, args)
+```
+
+### Delete a Contact Group
+
+``` py
+from nodepingpy import contactgroups
+token = "my-token"
+id = "201205050153W2Q4C-G-3QJWG"
+contactgroups.delete(token, id)
+```
+
+## Diagnostics Module
+
+Request diagnotics information from a probe or an AGENT.
+Dataclasses are available to pass in as an argument.
+
+For example, running an MTR diagnostic:
+
+```
+from nodepingpy import diagnostics
+from nodepingpy.nptypes import diagtypes
+token = "my-token"
+checkid = "201205050153W2Q4C-0J2HSIRF"
+args = diagtypes.Mtr(location="tx", target="example.com", count=20)
+diagnostics.get(token, checkid, args
+```
+
+This will run an MTR with a count of 20 from the probe in Texas at example.com
+
+## Information Module
+
+Get probe and location information
+
+### Get Probes
+
+Get all probes
+
+``` py
+from nodepingpy import information
+token = "my-token"
+information.get_all_probes(token)
+```
+
+Or a single probe
+
+``` py
+from nodepingpy import information
+token = "my-token"
+probe = "tx" # get texas
+information.get_probe(token, probe)
+```
+
+### Get Locations
+
+Get all locations/regions
+
+``` py
+from nodepingpy import information
+token = "my-token"
+information.get_all_locations(token)
+```
+
+Or a single location, like North America (nam)
+
+``` py
+from nodepingpy import information
+token = "my-token"
+location = "nam"
+information.get_location(token, location)
+```
+
+## Maintenance Module
+
+This module allows you to create, update, get, and delete ad-hoc and scheduled maintenaneces.
+
+Can be imported with
+
+``` py
+from nodepingpy import maintenance
+```
+
+### Get Maintenances
+
+Get all maintenance schedules
+
+``` py
+from nodepingpy import maintenance
+token = "my-token"
+maintenance.get_all(token)
+```
+
+Or one maintenance by ID
+
+``` py
+from nodepingpy import maintenance
+token = "my-token"
+maintenance_id = "NZT101"
+maintenance.get(token, maintenance_id)
+```
+
+### Create a Maintenance
+
+There are two types of maintenance:
+
+1. ad-hoc
+2. scheduled (cron)
+
+maintenancetype dataclasses are available to pass in as args.
+The below example creates an ad-hoc 30 minute maintenance.
+
+``` py
+from nodepingpy import maintenance
+from nodepingpy.nptypes.maintenancetypes import AdHocCreate
+token = "my-token"
+duration = 30
+checkids = ["201205050153W2Q4C-0J2HSIRF", "201205050153W2Q4C-4RZT8MLN"]
+enabled = True
+name = "Rebooting the server"
+args = AdHoc(duration, checkids, enabled, name)
+maintenance.create(token, args)
+```
+
+To create a scheduled/cron maintenance
+
+``` py
+from nodepingpy import maintenance
+from nodepingpy.nptypes.maintenancetypes import ScheduledCreate
+token = "my-token"
+duration = 30
+checkids = ["201205050153W2Q4C-0J2HSIRF", "201205050153W2Q4C-4RZT8MLN"]
+enabled = True
+name = "Rebooting the server"
+cron = "30 8 15 * *"
+args = Scheduled(duration, checkids, enabled, name, cron)
+maintenance.create(token, args)
+```
+
+### Update a Maintenance
+
+Updating a maintenance is similar to creating one, except you would supply the
+maintenance ID in addition to the Scheduled or AdHoc dataclass.
+
+For example, updating a Scheduled maintenance, and say from the previous example
+you wanted to set the duration to 60 minutes from 30.
+
+``` py
+from nodepingpy import maintenance
+from nodepingpy.nptypes.maintenancetypes import ScheduledUpdate
+token = "my-token"
+duration = 60
+checkids = ["201205050153W2Q4C-0J2HSIRF", "201205050153W2Q4C-4RZT8MLN"]
+enabled = True
+name = "Rebooting the server"
+cron = "30 8 15 * *"
+maintenance_id = "NZT101"
+args = Scheduled(duration, checkids, enabled, name, cron)
+maintenance.update(token, maintenance_id, args)
+```
+
+### Delete a Maintenance
+
+Delete any maintenance. You don't have to specify if it is AdHoc or Scheduled.
+
+``` py
+from nodepingpy import maintenance
+token = "my-token"
+maintenance_id = "NZT101"
+maintenance.delete(token, maintenance_id)
+```
+
+## Notification Profiles Module
+
+Can be imported with
+
+``` py
+from nodepingpy import notificationprofiles
+```
+
+### Getting Notification Profiles
+
+Getting all profiles
+
+``` py
+from nodepingpy import notificationprofiles
+token = "my-token"
+notificationprofiles.get_all(token)
+```
+
+Getting a single profile
+
+``` py
+from nodepingpy import notificationprofiles
+token = "my-token"
+id = "201205050153W2Q4C-P-3QJWG"
+notificationprofiles.get(token, id)
+```
+
+### Create a Notification Profile
+
+Notification profiles combine contact IDs, notification delays, and schedules
+so you can easily assign notifications to multiple checks if you want the same
+contacts to receive notifications on the same schedule across checks, and be able
+to update the profile without having to update any checks.
+
+``` py
+from nodepingpy import notificationprofiles
+token = "my-token"
+notifications = [{"A4597":{"delay":0, "schedule":"All"}}, {"Y59XV":{"delay":2, "schedule":"Days"}}]
+name = "My Profile"
+notificationprofiles.create(token, name, notifications)
+```
+
+### Update a Notification Profile
+
+Updating a notification profile is the same as creating a new one, only that you
+provide the existing profile's ID
+
+``` py
+from nodepingpy import notificationprofiles
+token = "my-token"
+notifications = [{"A4597":{"delay":0, "schedule":"All"}}, {"Y59XV":{"delay":2, "schedule":"Days"}}]
+name = "My New Name"
+id = "201205050153W2Q4C-P-3QJWG"
+notificationprofiles.update(token, id, name, notifications)
+```
+
+### Delete a Notification Profile
+
+Delete a profile
+
+``` py
+from nodepingpy import notificationprofiles
+token = "my-token"
+id = "201205050153W2Q4C-P-3QJWG"
+notificationprofiles.delete(token, id)
+```
+
+## Notifications Module
+
+Get notifications for a check or the account.
+
+Can be imported with
+
+``` py
+from nodepingpy import notifications
+```
+
+Here are some examples:
+
+Get the last 100 notifications
+
+``` py
+from nodepingpy import notifications
+token = "my-token"
+args = notifications.Notification(limit=100)
+notifications.get(token, args)
+```
+
+Get the last 200 notifications, including subaccounts
+
+``` py
+from nodepingpy import notifications
+token = "my-token"
+args = notifications.Notification(limit=200, subaccounts=True)
+notifications.get(token, args)
+```
+
+Get notifications in the last 24 hours for a specific check
+
+``` py
+from nodepingpy import notifications
+token = "my-token"
+args = notifications.Notification("201205050153W2Q4C-0J2HSIRF", 24)
+notifications.get(token, args)
+```
