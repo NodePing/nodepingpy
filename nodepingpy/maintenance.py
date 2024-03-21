@@ -14,9 +14,18 @@ from ._utils import API_URL
 
 ROUTE = "maintenance"
 
+
 def get_all(token: str, customerid: str | None = None) -> dict:
     """Get information about all maintenances.
 
+    https://nodeping.com/docs-api-maintenance.html#get
+
+    Args:
+        token (str): NodePing API token
+        customerid (str): subaccount ID
+
+    Returns:
+        dict: All maintenance information
     """
     data = _utils.add_custid({"token": token}, customerid)
 
@@ -26,6 +35,15 @@ def get_all(token: str, customerid: str | None = None) -> dict:
 def get(token: str, maintenanceid: str, customerid: str | None = None) -> dict:
     """Get information about one maintenance.
 
+    https://nodeping.com/docs-api-maintenance.html#get
+
+    Args:
+        token (str): NodePing API token
+        maintenanceid (str): Maintenance ID
+        customerid (str): subaccount ID
+
+    Returns:
+        dict: Maintenance ID's maintenance information
     """
     url = "{}/{}/{}".format(API_URL, ROUTE, maintenanceid)
     data = _utils.add_custid({"token": token}, customerid)
@@ -36,10 +54,19 @@ def get(token: str, maintenanceid: str, customerid: str | None = None) -> dict:
 def create(token: str, args, customerid: str | None = None) -> dict:
     """Create an new ad-hoc or scheduled maintenance.
 
+    https://nodeping.com/docs-api-maintenance.html#post
+
+    Args:
+        token (str): NodePing API token
+        args (dataclass): maintenancetypes.AdHocCreate or maintenancetypes.ScheduledCreate
+        customerid (str): subaccount ID
+
+    Returns:
+        dict: Created maintenance's information
     """
-    if isinstance(args, maintenancetypes.AdHoc):
+    if isinstance(args, maintenancetypes.AdHocCreate):
         url = "{}/{}/ad-hoc".format(API_URL, ROUTE)
-    elif isinstance(args, maintenancetypes.Scheduled):
+    elif isinstance(args, maintenancetypes.ScheduledCreate):
         url = "{}/{}".format(API_URL, ROUTE)
     else:
         return {"error": "Invalid maintenance class"}
@@ -51,9 +78,19 @@ def create(token: str, args, customerid: str | None = None) -> dict:
     return _utils.post(url, senddata)
 
 
-def update(token: str, id : str, args, customerid: str | None = None) -> dict:
+def update(token: str, id: str, args, customerid: str | None = None) -> dict:
     """Update an existing ad-hoc or scheduled maintenance.
 
+    https://nodeping.com/docs-api-maintenance.html#put
+
+    Args:
+        token (str): NodePing API token
+        id (str): Maintenance ID
+        args (dataclass): maintenancetypes.AdHocUpdate or maintenancetypes.ScheduledUpdate
+        customerid (str): subaccount ID
+
+    Returns:
+        dict: Updated maintenance's information
     """
     url = "{}/{}/{}".format(API_URL, ROUTE, id)
 
@@ -67,11 +104,17 @@ def update(token: str, id : str, args, customerid: str | None = None) -> dict:
 def delete(token: str, maintenanceid: str, customerid: str | None = None) -> dict:
     """Delete one maintenance.
 
+    https://nodeping.com/docs-api-maintenance.html#delete
+
+    Args:
+        token (str): NodePing API token
+        maintenanceid (str): Maintenance ID
+        customerid (str): subaccount ID
+
+    Returns:
+        dict: Confirmation of maintenance successfully being deleted or not.
     """
     url = "{}/{}/{}".format(API_URL, ROUTE, maintenanceid)
     data = _utils.add_custid({"token": token}, customerid)
 
     return _utils.delete(url, data)
-
-
-
