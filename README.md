@@ -274,7 +274,7 @@ access to the different fields for each TYPE. For example, creating a PING check
 from nodepingpy import checks
 from nodepingpy.nptypes import checktypes
 token = "my-token"
-args = checktypes.PingCheck("example.com", ipv4=False, label="ping example.com", interval=1, autodiag=True, sens=5, runlocations="nam")
+args = checktypes.PingCheck("example.com", ipv6=False, label="ping example.com", interval=1, autodiag=True, sens=5, runlocations="nam")
 checks.create_check(token, args)
 ```
 
@@ -331,7 +331,7 @@ from nodepingpy import checks
 token = "my-token"
 checkid = "201205050153W2Q4C-0J2HSIRF"
 ts_later = round((time() + 600) * 1000)
-checks.mute_check(token, checkid, duration)
+checks.mute_check(token, checkid, ts_later )
 ```
 
 You can also set duration to `True` or `False` to indefinitely
@@ -425,7 +425,7 @@ token = "my-token"
 customerid = "201205050153W2Q4C"
 name = "Bob Alice"
 custrole = "edit"
-newaddresses = [{'address': 'me@email.com'}, {'address': '5551238888'}]
+newaddresses = [{'address': 'me@email.com', 'type': 'email'}, {'address': '5551238888', 'type': 'sms'}]
 contacts.create(token, customerid, custrole, name, newaddresses)
 ```
 
@@ -447,7 +447,7 @@ contents, and then PUT them back. To add addresses to the contact, you will use 
  'NMYW1XC1': {'accountsupressall': False, 'address': 'newme2@example.com'},
  'P080YGYO': {'accountsuppressall': False, 'address': '321444777'}}
 >>> addresses["JMMARFHQ"]["address"] = "ichangedthis@example.com"
->>> newaddresses = [{'accountsupressall': True, 'address': 'addinganother@example.com'}]}
+>>> newaddresses = [{'accountsupressall': True, 'address': 'addinganother@example.com'}]
 >>> contacts.update(token, contactid, {"addresses": addresses, "newaddresses": newaddresses})
 ```
 
@@ -555,9 +555,9 @@ for example.
 ```
 from nodepingpy import contactgroups
 token = "my-token"
-contacts = ["JMMARFHQ", "NMYW1XC1", "P080YGYO"]
+contactlist = ["JMMARFHQ", "NMYW1XC1", "P080YGYO"]
 name = "sysadmins"
-contactgroups.create(token, name, contacts)
+contactgroups.create(token, name, contactlist)
 ```
 
 ### Update a Contact Group
@@ -596,10 +596,11 @@ from nodepingpy.nptypes import diagtypes
 token = "my-token"
 checkid = "201205050153W2Q4C-0J2HSIRF"
 args = diagtypes.Mtr(location="tx", target="example.com", count=20)
-diagnostics.get(token, checkid, args
+diagnostics.get(token, checkid, args)
 ```
 
-This will run an MTR with a count of 20 from the probe in Texas at example.com
+This will run an MTR with a count of 20 from the probe in Texas with
+example.com as the target.
 
 ## Information Module
 
@@ -690,7 +691,7 @@ duration = 30
 checkids = ["201205050153W2Q4C-0J2HSIRF", "201205050153W2Q4C-4RZT8MLN"]
 enabled = True
 name = "Rebooting the server"
-args = AdHoc(duration, checkids, enabled, name)
+args = AdHocCreate(duration, checkids, enabled, name)
 maintenance.create(token, args)
 ```
 
@@ -705,7 +706,7 @@ checkids = ["201205050153W2Q4C-0J2HSIRF", "201205050153W2Q4C-4RZT8MLN"]
 enabled = True
 name = "Rebooting the server"
 cron = "30 8 15 * *"
-args = Scheduled(duration, checkids, enabled, name, cron)
+args = ScheduledCreate(duration, checkids, enabled, name, cron)
 maintenance.create(token, args)
 ```
 
@@ -727,7 +728,7 @@ enabled = True
 name = "Rebooting the server"
 cron = "30 8 15 * *"
 maintenance_id = "NZT101"
-args = Scheduled(duration, checkids, enabled, name, cron)
+args = ScheduledUpdate(duration, checkids, enabled, name, cron)
 maintenance.update(token, maintenance_id, args)
 ```
 
