@@ -12,7 +12,7 @@ class Results:
         span (int): number of hours of results to retrieve. Cannot be used with start/end.
         limit (int): number of records to retrieve
         start (int | str): date/time for results to start. Millisecond, RFC2822, or ISO 8601. Times are assumed to be GMT unless the time includes the timezone
-        end (int | str): use in conjuction with start. End time to get results
+        end (int | str): use in conjunction with start. End time to get results
         clean (bool): whether to use the older format for results. True is recommended.
     """
     span: int | None = None
