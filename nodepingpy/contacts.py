@@ -72,15 +72,13 @@ def get_by_type(
     contacts = get_all(token, customerid)
 
     for key, value in contacts.items():
-        contact = value["addresses"]
-
-        contacts_dict.update(
-            {
-                key: value
-                for _cid, contents in contact.items()
-                if contents["type"] == contacttype
-            }
-        )
+        for _, contents in value["addresses"].items():
+            # sometimes type may not exist
+            try:
+                if contents["type"] == contacttype:
+                    contacts_dict.update({key: value})
+            except KeyError:
+                continue
 
     return contacts_dict
 
@@ -97,7 +95,7 @@ def create(
     https://nodeping.com/docs-api-contacts.html#post-put
 
     newaddresses example:
-    [{'address': 'me@email.com'}, {'address': '5551238888'}]
+    [{'address': 'me@email.com', 'type': 'email'}, {'address': '5551238888', 'type': 'sms'}]
 
     newaddresses webhook example
 
