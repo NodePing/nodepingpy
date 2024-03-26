@@ -331,7 +331,7 @@ from nodepingpy import checks
 token = "my-token"
 checkid = "201205050153W2Q4C-0J2HSIRF"
 ts_later = round((time() + 600) * 1000)
-checks.mute_check(token, checkid, ts_later )
+checks.mute_check(token, checkid, ts_later)
 ```
 
 You can also set duration to `True` or `False` to indefinitely
@@ -590,7 +590,7 @@ Dataclasses are available to pass in as an argument.
 
 For example, running an MTR diagnostic:
 
-```
+``` py
 from nodepingpy import diagnostics
 from nodepingpy.nptypes import diagtypes
 token = "my-token"
