@@ -44,6 +44,7 @@ def get(token: str, args: dict, customerid: str | None = None) -> dict:
     """
     data = asdict(args)
     data["token"] = token
+    data["customerid"] = customerid
 
     if customerid:
         url = "{}/{}/{}".format(API_URL, ROUTE, customerid)
