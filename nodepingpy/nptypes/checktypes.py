@@ -44,6 +44,7 @@ class AgentCheck:
         dep (str): ID of the check used for the notification dependency
         notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
         mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+        tags (list): list of strings as tag names
     """
 
     oldresultfail: bool = False
@@ -57,6 +58,7 @@ class AgentCheck:
     dep: str = DEFAULTS["dep"]
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
+    tags: list = field(default_factory=list)
     type: str = "AGENT"
 
     def __post_init__(self):
@@ -87,6 +89,7 @@ class AudioCheck:
         dep (str): ID of the check used for the notification dependency
         notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
         mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+        tags (list): list of strings as tag names
     """
 
     target: str
@@ -104,6 +107,7 @@ class AudioCheck:
     dep: str = DEFAULTS["dep"]
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
+    tags: list = field(default_factory=list)
     type: str = "AUDIO"
 
     def __post_init__(self):
@@ -143,6 +147,7 @@ class ClusterCheck:
         dep (str): ID of the check used for the notification dependency
         notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
         mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+        tags (list): list of strings as tag names
     """
 
     data: dict
@@ -158,6 +163,7 @@ class ClusterCheck:
     dep: str = DEFAULTS["dep"]
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
+    tags: list = field(default_factory=list)
     type: str = "CLUSTER"
 
     def __post_init__(self):
@@ -192,6 +198,7 @@ class DnsCheck:
         dep (str): ID of the check used for the notification dependency
         notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
         mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+        tags (list): list of strings as tag names
     """
 
     target: str = ""
@@ -215,6 +222,7 @@ class DnsCheck:
     dep: str = DEFAULTS["dep"]
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
+    tags: list = field(default_factory=list)
     type: str = "DNS"
 
     def __post_init__(self):
@@ -252,6 +260,7 @@ class DohDotCheck:
         dep (str): ID of the check used for the notification dependency
         notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
         mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+        tags (list): list of strings as tag names
     """
 
     target: str
@@ -278,6 +287,7 @@ class DohDotCheck:
     dep: str = DEFAULTS["dep"]
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
+    tags: list = field(default_factory=list)
     type: str = "DOHDOT"
 
     def __post_init__(self):
@@ -309,6 +319,7 @@ class FtpCheck:
         dep (str): ID of the check used for the notification dependency
         notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
         mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+        tags (list): list of strings as tag names
     """
 
     target: str
@@ -329,6 +340,7 @@ class FtpCheck:
     dep: str = DEFAULTS["dep"]
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
+    tags: list = field(default_factory=list)
     type: str = "FTP"
 
     def __post_init__(self):
@@ -357,6 +369,7 @@ class HttpCheck:
         dep (str): ID of the check used for the notification dependency
         notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
         mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+        tags (list): list of strings as tag names
     """
 
     target: str
@@ -374,6 +387,7 @@ class HttpCheck:
     dep: str = DEFAULTS["dep"]
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
+    tags: list = field(default_factory=list)
     type: str = "HTTP"
 
     def __post_init__(self):
@@ -411,6 +425,7 @@ class HttpAdvCheck:
         dep (str): ID of the check used for the notification dependency
         notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
         mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+        tags (list): list of strings as tag names
     """
 
     target: str
@@ -437,6 +452,7 @@ class HttpAdvCheck:
     dep: str = DEFAULTS["dep"]
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
+    tags: list = field(default_factory=list)
     type: str = "HTTPADV"
 
     def __post_init__(self):
@@ -467,6 +483,7 @@ class HttpContentCheck:
         dep (str): ID of the check used for the notification dependency
         notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
         mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+        tags (list): list of strings as tag names
     """
 
     target: str
@@ -486,6 +503,7 @@ class HttpContentCheck:
     dep: str = DEFAULTS["dep"]
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
+    tags: list = field(default_factory=list)
     type: str = "HTTPCONTENT"
 
     def __post_init__(self):
@@ -530,6 +548,7 @@ class HttpParseCheck:
         dep (str): ID of the check used for the notification dependency
         notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
         mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+        tags (list): list of strings as tag names
     """
 
     target: str
@@ -547,6 +566,7 @@ class HttpParseCheck:
     dep: str = DEFAULTS["dep"]
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
+    tags: list = field(default_factory=list)
     type: str = "HTTPPARSE"
 
     def __post_init__(self):
@@ -579,6 +599,7 @@ class Imap4Check:
         dep (str): ID of the check used for the notification dependency
         notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
         mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+        tags (list): list of strings as tag names
     """
 
     target: str
@@ -600,6 +621,7 @@ class Imap4Check:
     dep: str = DEFAULTS["dep"]
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
+    tags: list = field(default_factory=list)
     type: str = "IMAP4"
 
     def __post_init__(self):
@@ -643,6 +665,7 @@ class MongodbCheck:
         dep (str): ID of the check used for the notification dependency
         notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
         mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+        tags (list): list of strings as tag names
     """
 
     target: str
@@ -662,6 +685,7 @@ class MongodbCheck:
     dep: str = DEFAULTS["dep"]
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
+    tags: list = field(default_factory=list)
     type: str = "MONGODB"
 
     def __post_init__(self):
@@ -689,6 +713,7 @@ class MtrCheck:
         dep (str): ID of the check used for the notification dependency
         notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
         mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+        tags (list): list of strings as tag names
     """
 
     target: str
@@ -705,6 +730,7 @@ class MtrCheck:
     dep: str = DEFAULTS["dep"]
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
+    tags: list = field(default_factory=list)
     type: str = "MTR"
 
     def __post_init__(self):
@@ -753,6 +779,7 @@ class MySqlCheck:
         dep (str): ID of the check used for the notification dependency
         notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
         mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+        tags (list): list of strings as tag names
     """
 
     target: str
@@ -776,6 +803,7 @@ class MySqlCheck:
     dep: str = DEFAULTS["dep"]
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
+    tags: list = field(default_factory=list)
     type: str = "MYSQL"
 
     def __post_init__(self):
@@ -804,6 +832,7 @@ class NtpCheck:
         dep (str): ID of the check used for the notification dependency
         notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
         mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+        tags (list): list of strings as tag names
     """
 
     target: str
@@ -821,6 +850,7 @@ class NtpCheck:
     dep: str = DEFAULTS["dep"]
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
+    tags: list = field(default_factory=list)
     type: str = "NTP"
 
     def __post_init__(self):
@@ -848,6 +878,7 @@ class PingCheck:
         dep (str): ID of the check used for the notification dependency
         notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
         mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+        tags (list): list of strings as tag names
     """
 
     target: str
@@ -864,6 +895,7 @@ class PingCheck:
     dep: str = DEFAULTS["dep"]
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
+    tags: list = field(default_factory=list)
     type: str = "PING"
 
     def __post_init__(self):
@@ -896,6 +928,7 @@ class Pop3Check:
         dep (str): ID of the check used for the notification dependency
         notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
         mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+        tags (list): list of strings as tag names
     """
 
     target: str
@@ -917,6 +950,7 @@ class Pop3Check:
     dep: str = DEFAULTS["dep"]
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
+    tags: list = field(default_factory=list)
     type: str = "POP3"
 
     def __post_init__(self):
@@ -945,6 +979,7 @@ class PortCheck:
         dep (str): ID of the check used for the notification dependency
         notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
         mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+        tags (list): list of strings as tag names
     """
 
     target: str
@@ -962,6 +997,7 @@ class PortCheck:
     dep: str = DEFAULTS["dep"]
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
+    tags: list = field(default_factory=list)
     type: str = "PORT"
 
     def __post_init__(self):
@@ -1005,6 +1041,7 @@ class PostgreSqlCheck:
         dep (str): ID of the check used for the notification dependency
         notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
         mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+        tags (list): list of strings as tag names
     """
 
     target: str
@@ -1023,6 +1060,7 @@ class PostgreSqlCheck:
     dep: str = DEFAULTS["dep"]
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
+    tags: list = field(default_factory=list)
     type: str = "PGSQL"
 
     def __post_init__(self):
@@ -1065,6 +1103,7 @@ class PushCheck:
         dep (str): ID of the check used for the notification dependency
         notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
         mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+        tags (list): list of strings as tag names
     """
 
     checktoken: str = "reset"
@@ -1081,6 +1120,7 @@ class PushCheck:
     dep: str = DEFAULTS["dep"]
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
+    tags: list = field(default_factory=list)
     type: str = "PUSH"
 
     def __post_init__(self):
@@ -1106,8 +1146,10 @@ class RblCheck:
         threshold (int): Time in seconds for an acceptable response
         sens (int): Rechecks to help avoid unecessary notifications
         dep (str): ID of the check used for the notification dependency
+        ipv6 (bool): Whether to resolve IPv4 or IPv6
         notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
         mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+        tags (list): list of strings as tag names
     """
 
     target: str
@@ -1122,8 +1164,10 @@ class RblCheck:
     threshold: int = DEFAULTS["threshold"]
     sens: int = DEFAULTS["sens"]
     dep: str = DEFAULTS["dep"]
+    ipv6: bool = False
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
+    tags: list = field(default_factory=list)
     type: str = "RBL"
 
     def __post_init__(self):
@@ -1153,6 +1197,7 @@ class RedisCheck:
         dep (str): ID of the check used for the notification dependency
         notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
         mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+        tags (list): list of strings as tag names
     """
 
     target: str
@@ -1171,6 +1216,7 @@ class RedisCheck:
     dep: str = DEFAULTS["dep"]
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
+    tags: list = field(default_factory=list)
     type: str = "REDIS"
 
     def __post_init__(self):
@@ -1195,6 +1241,7 @@ class RdpCheck:
         dep (str): ID of the check used for the notification dependency
         notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
         mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+        tags (list): list of strings as tag names
     """
 
     target: str
@@ -1210,6 +1257,7 @@ class RdpCheck:
     dep: str = DEFAULTS["dep"]
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
+    tags: list = field(default_factory=list)
     type: str = "RDP"
 
     def __post_init__(self):
@@ -1238,6 +1286,7 @@ class SipCheck:
         dep (str): ID of the check used for the notification dependency
         notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
         mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+        tags (list): list of strings as tag names
     """
 
     target: str
@@ -1255,6 +1304,7 @@ class SipCheck:
     dep: str = DEFAULTS["dep"]
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
+    tags: list = field(default_factory=list)
     type: str = "SIP"
 
     def __post_init__(self):
@@ -1289,6 +1339,7 @@ class SmtpCheck:
         dep (str): ID of the check used for the notification dependency
         notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
         mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+        tags (list): list of strings as tag names
     """
 
     target: str
@@ -1312,6 +1363,7 @@ class SmtpCheck:
     dep: str = DEFAULTS["dep"]
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
+    tags: list = field(default_factory=list)
     type: str = "SMTP"
 
     def __post_init__(self):
@@ -1346,6 +1398,7 @@ class SnmpCheck:
         dep (str): ID of the check used for the notification dependency
         notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
         mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+        tags (list): list of strings as tag names
     """
 
     target: str
@@ -1365,6 +1418,7 @@ class SnmpCheck:
     dep: str = DEFAULTS["dep"]
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
+    tags: list = field(default_factory=list)
     type: str = "SNMP"
 
     def __post_init__(self):
@@ -1400,6 +1454,7 @@ class Spec10DnsCheck:
         dep (str): ID of the check used for the notification dependency
         notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
         mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+        tags (list): list of strings as tag names
     """
 
     data: dict
@@ -1415,6 +1470,7 @@ class Spec10DnsCheck:
     dep: str = DEFAULTS["dep"]
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
+    tags: list = field(default_factory=list)
     type: str = "SPEC10DNS"
 
     def __post_init__(self):
@@ -1450,6 +1506,7 @@ class Spec10RddsCheck:
         dep (str): ID of the check used for the notification dependency
         notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
         mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+        tags (list): list of strings as tag names
     """
 
     data: dict
@@ -1465,6 +1522,7 @@ class Spec10RddsCheck:
     dep: str = DEFAULTS["dep"]
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
+    tags: list = field(default_factory=list)
     type: str = "SPEC10RDDS"
 
     def __post_init__(self):
@@ -1497,6 +1555,7 @@ class SshCheck:
         dep (str): ID of the check used for the notification dependency
         notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
         mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+        tags (list): list of strings as tag names
     """
 
     target: str
@@ -1518,6 +1577,7 @@ class SshCheck:
     dep: str = DEFAULTS["dep"]
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
+    tags: list = field(default_factory=list)
     type: str = "SSH"
 
     def __post_init__(self):
@@ -1546,6 +1606,7 @@ class SslCheck:
         dep (str): ID of the check used for the notification dependency
         notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
         mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+        tags (list): list of strings as tag names
     """
 
     target: str
@@ -1563,6 +1624,7 @@ class SslCheck:
     dep: str = DEFAULTS["dep"]
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
+    tags: list = field(default_factory=list)
     type: str = "SSL"
 
     def __post_init__(self):
@@ -1592,6 +1654,7 @@ class WebsocketCheck:
         dep (str): ID of the check used for the notification dependency
         notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
         mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+        tags (list): list of strings as tag names
     """
 
     target: str
@@ -1610,6 +1673,7 @@ class WebsocketCheck:
     dep: str = DEFAULTS["dep"]
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
+    tags: list = field(default_factory=list)
     type: str = "WEBSOCKET"
 
     def __post_init__(self):
@@ -1625,6 +1689,7 @@ class WhoisCheck:
     Args:
         target (str): The FQDN to check
         whoisserver (str): Server to query WHOIS information from
+        ipv6 (bool): Whether to resolve IPv4 or IPv6
         invert (bool): Whether or not the response contains the contentstring
         contentstring (str): string content expected in the response
         warningdays (int): number of days to warn of domain registration expiration
@@ -1640,6 +1705,7 @@ class WhoisCheck:
         dep (str): ID of the check used for the notification dependency
         notifications (list): list of objects containing contact ID, delay, and scheduling for notifications
         mute (bool|int): bool or millisecond timestamp (UTC) in the future. True to mute indefinitely
+        tags (list): list of strings as tag names
     """
 
     target: str
@@ -1660,6 +1726,7 @@ class WhoisCheck:
     dep: str = DEFAULTS["dep"]
     notifications: list = field(default_factory=list)
     mute: bool = DEFAULTS["mute"]
+    tags: list = field(default_factory=list)
     type: str = "WHOIS"
 
     def __post_init__(self):
@@ -1687,6 +1754,7 @@ class GetCheck(TypedDict):
     state: int
     status: str
     suspacct: bool
+    tags: list
     type: str
     uuid: str
 
@@ -1716,5 +1784,6 @@ class ModifiedCheck(TypedDict):
     public: bool
     runlocations: bool
     status: str
+    tags: list
     type: str
     uuid: str
