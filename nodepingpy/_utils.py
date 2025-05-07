@@ -47,7 +47,7 @@ def generate_querystring(args: dict) -> str:
         str: escaped querystring
     """
 
-    return urlencode({k: v for k, v in args.items() if v != None})
+    return urlencode({k: v for k, v in args.items() if v is not None})
 
 
 def create_timestamp(duration):
