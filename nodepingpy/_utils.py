@@ -4,7 +4,6 @@
 """
 
 from typing import Any
-from nodepingpy.nptypes.contacttypes import *
 
 from time import time
 from urllib.parse import urlencode
